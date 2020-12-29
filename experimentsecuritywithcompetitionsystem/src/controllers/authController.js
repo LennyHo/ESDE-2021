@@ -8,6 +8,15 @@ const filter = require('../filter/filterFunctions');
 exports.processLogin = (req, res, next) => {
 
     try {
+        //return res.status(500).json({ message: message });
+        //If the following statement replaces the above statement
+        //to return a JSON response to the client, the SQLMap or
+        //any attacker (who relies on the error) will be very happy
+        //because they relies a lot on SQL error for designing how to do 
+        //attack and anticipate how much "rewards" after the effort.
+        //Rewards such as sabotage (seriously damage the data in database), 
+        //data theft (grab and sell).
+         
         var date = new Date();
         console.log(date + " user is attempting to login.");
 
@@ -118,11 +127,3 @@ exports.processRegister = (req, res, next) => {
 }; //End of processRegister
 
 
-                //return res.status(500).json({ message: message });
-                //If the following statement replaces the above statement
-                //to return a JSON response to the client, the SQLMap or
-                //any attacker (who relies on the error) will be very happy
-                //because they relies a lot on SQL error for designing how to do 
-                //attack and anticipate how much "rewards" after the effort.
-                //Rewards such as sabotage (seriously damage the data in database), 
-                //data theft (grab and sell). 
