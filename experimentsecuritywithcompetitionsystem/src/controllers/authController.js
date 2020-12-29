@@ -8,7 +8,8 @@ const filter = require('../filter/filterFunctions');
 exports.processLogin = (req, res, next) => {
 
     try {
-        console.log("test authenticating the user credentials.");
+        var date = new Date();
+        console.log(date + " user is attempting to login.");
 
         var email = req.body.email;
         var password = req.body.password;
@@ -16,28 +17,25 @@ exports.processLogin = (req, res, next) => {
         if (email == "") {
 
             var date = new Date();
-            console.log(date + "User has not key in the email.");
+            console.log(date + " User has not key in the email.");
 
         } else if (password == "") {
 
             date = new Date();
-            console.log(date + "User did not fill in the password.");
-            
+            console.log(date + " User did not fill in the password.");
+
         }
         else {
-
-            console.log("going through authenticate");
-
+            date = new Date();
+            console.log(date + " going through authentication");
             auth.authenticate(email, function (error, results) {
-
-                console.log("authenticate complete");
+                console.log(date + " authentication complete");
 
                 if (error) {
-                    let message = 'Credentials are not valid.';
-                    var date = new Date();
                     // For the console log to work just add if result != null beforehand
-                    console.error(date + 'User has failed to login.');
-                    return res.status(500).json({ message: message });
+                    console.error(date + " User email is not valid.");
+                    // let message = 'Credentials are not valid.';
+                    // return res.status(500).json({ message: message });
                 }
                 else {
                     if (results.length === 1) {
