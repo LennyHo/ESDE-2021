@@ -1,0 +1,21 @@
+POST /api/user/login HTTP/1.1
+Host: localhost:5000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:83.0) Gecko/20100101 Firefox/83.0
+Accept: application/json, text/plain, */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Content-Type: multipart/form-data; boundary=---------------------------131263917031635664332566472206
+Content-Length: 313
+Origin: http://localhost:3001
+Connection: close
+Referer: http://localhost:3001/login.html
+
+-----------------------------131263917031635664332566472206
+Content-Disposition: form-data; name="email"
+
+rita@designer.com
+-----------------------------131263917031635664332566472206
+Content-Disposition: form-data; name="password"
+
+password
+-----------------------------131263917031635664332566472206--
