@@ -8,17 +8,7 @@ const filter = require('../filter/filterFunctions');
 exports.processLogin = (req, res, next) => {
 
     try {
-
-        //return res.status(500).json({ message: message });
-        //If the following statement replaces the above statement
-        //to return a JSON response to the client, the SQLMap or
-        //any attacker (who relies on the error) will be very happy
-        //because they relies a lot on SQL error for designing how to do 
-        //attack and anticipate how much "rewards" after the effort.
-        //Rewards such as sabotage (seriously damage the data in database), 
-        //data theft (grab and sell). 
-        var date = new Date();
-        console.log(date + " user is attempting to login.");
+        console.log("test authenticating the user credentials.");
 
         var email = req.body.email;
         var password = req.body.password;
@@ -26,25 +16,28 @@ exports.processLogin = (req, res, next) => {
         if (email == "") {
 
             var date = new Date();
-            console.log(date + " User has not key in the email.");
+            console.log(date + "User has not key in the email.");
 
         } else if (password == "") {
 
             date = new Date();
-            console.log(date + " User did not fill in the password.");
-
+            console.log(date + "User did not fill in the password.");
+            
         }
         else {
-            date = new Date();
-            console.log(date + " going through authentication");
+
+            console.log("going through authenticate");
+
             auth.authenticate(email, function (error, results) {
-                console.log(date + " authentication complete");
+
+                console.log("authenticate complete");
 
                 if (error) {
+                    let message = 'Credentials are not valid.';
+                    var date = new Date();
                     // For the console log to work just add if result != null beforehand
-                    console.error(date + " User email is not valid.");
-                    // let message = 'Credentials are not valid.';
-                    // return res.status(500).json({ message: message });
+                    console.error(date + 'User has failed to login.');
+                    return res.status(500).json({ message: message });
                 }
                 else {
                     if (results.length === 1) {
@@ -79,7 +72,7 @@ exports.processLogin = (req, res, next) => {
                     }
                     else {
                         if ((password[0] === null) || (results[0] === null)) {
-                            date = new Date();
+
                             console.error(date + 'A user has failed to login');
                             return res.status(500).json({ message: 'login failed' });
                         }
@@ -127,3 +120,11 @@ exports.processRegister = (req, res, next) => {
 }; //End of processRegister
 
 
+                //return res.status(500).json({ message: message });
+                //If the following statement replaces the above statement
+                //to return a JSON response to the client, the SQLMap or
+                //any attacker (who relies on the error) will be very happy
+                //because they relies a lot on SQL error for designing how to do 
+                //attack and anticipate how much "rewards" after the effort.
+                //Rewards such as sabotage (seriously damage the data in database), 
+                //data theft (grab and sell). 
