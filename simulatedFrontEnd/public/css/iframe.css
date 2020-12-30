@@ -51,12 +51,12 @@
 }
 
 #vulnerable_website {
-    position: relative;
-    opacity: 0.0;
     width: 120px;
     height: 50px;
     top: 20px;
     left: -127px;
     z-index: 2;
     padding-left: 80px;
+    position: relative;
+    opacity: 0.0;
 }
