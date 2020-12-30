@@ -16,13 +16,13 @@ exports.processLogin = (req, res, next) => {
         if (email == "") {
 
             var date = new Date();
-            console.log(date + "User has not key in the email.");
+            console.log(date + " User has not key in the email.");
 
         } else if (password == "") {
 
             date = new Date();
-            console.log(date + "User did not fill in the password.");
-            
+            console.log(date + " User did not fill in the password.");
+
         }
         else {
 
@@ -33,11 +33,11 @@ exports.processLogin = (req, res, next) => {
                 console.log("authenticate complete");
 
                 if (error) {
-                    let message = 'Credentials are not valid.';
+                    // let message = 'Credentials are not valid.';
                     var date = new Date();
                     // For the console log to work just add if result != null beforehand
-                    console.error(date + 'User has failed to login.');
-                    return res.status(500).json({ message: message });
+                    console.error(date + "User's email has failed to login.");
+                    return res.status(500).json({ message: error });
                 }
                 else {
                     if (results.length === 1) {
