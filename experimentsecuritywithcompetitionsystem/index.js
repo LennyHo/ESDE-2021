@@ -40,14 +40,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //app.use(express.urlencoded({ extended: true }));
 
 
-
-
-
-
-
-
-
-
 //Express Router
 const router = express.Router();
 app.use(router);
@@ -75,7 +67,7 @@ router.use((err, req, res, next) => {
     }
 });
 
-process.on('uncaughtException', function(error, origin) {
+process.on('uncaughtException', function (error, origin) {
     //Handle the error safely. 
     //Developer note: As long as you have callback hell, the error handling code
     //will break. This often occurs during team development.
@@ -86,6 +78,18 @@ process.on('uncaughtException', function(error, origin) {
     process.exit(1);
 })
 
+
+// x-frame option
+app.use(function (req, res, next) {
+    res.setHeader('X-Frame-Options', 'sameorigin');
+    next();
+});
+
+// CSP
+app.use(function (req, res, next) {
+    res.setHeader("Content-Security-Policy", "frame-ancestors 'self';");
+    next();
+});
 
 
 app.listen(PORT, err => {
