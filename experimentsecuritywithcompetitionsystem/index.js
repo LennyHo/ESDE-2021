@@ -80,12 +80,12 @@ process.on('uncaughtException', function (error, origin) {
 
 
 // x-frame option
-app.use(function (req, res, next) {
-    res.setHeader('X-Frame-Options', 'sameorigin');
-    next();
-});
+// app.use(function (req, res, next) {
+//     res.setHeader('X-Frame-Options', 'sameorigin');
+//     next();
+// });
 
-// CSP
+
 app.use(function (req, res, next) {
     res.setHeader("Content-Security-Policy", "frame-ancestors 'self';");
     next();
