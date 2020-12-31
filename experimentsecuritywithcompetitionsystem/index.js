@@ -80,16 +80,16 @@ process.on('uncaughtException', function (error, origin) {
 
 
 // x-frame option
-app.use(function (req, res, next) {
-    res.setHeader('X-Frame-Options', 'sameorigin');
-    next();
-});
-
-
 // app.use(function (req, res, next) {
-//     res.setHeader("Content-Security-Policy", "frame-ancestors 'self';");
+//     res.setHeader('X-Frame-Options', 'sameorigin');
 //     next();
 // });
+
+
+app.use(function (req, res, next) {
+    res.setHeader("Content-Security-Policy", "frame-ancestors 'none';");
+    next();
+});
 
 
 app.listen(PORT, err => {

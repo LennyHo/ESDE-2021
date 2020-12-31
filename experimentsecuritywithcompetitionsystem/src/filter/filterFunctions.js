@@ -31,9 +31,9 @@ var filter = {
 
         console.log('test 1');
 
-        var reDesignTitle = new RegExp(`^[A-Za-z?0-9]+$`);
+        var reDesignTitle = new RegExp(`^[A-Za-z?0-9"'.,\s]+$`);
 
-        var reDesignDescription = new RegExp(`^[A-Za-z?0-9]+$`);
+        var reDesignDescription = new RegExp(`^[A-Za-z?0-9"'.,\s]+$`);
 
         console.log("finish regex");
         if (reDesignTitle.test(designTitle) && reDesignDescription.test(designDescription)) {
