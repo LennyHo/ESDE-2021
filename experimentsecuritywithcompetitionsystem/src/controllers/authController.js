@@ -74,7 +74,7 @@ exports.processLogin = async (req, res, next) => {
         if (retrySecs > 0) {
             // If IP or Username + IP is already blocked send status 429
             date = new Date();
-            console.log(date + '[' + ipAddr + ']' + "User email is already blocked.");//might have to change
+            console.log(date + '[' + ipAddr + ']' + " User email is already blocked.");//might have to change
             res.set('Retry-After', String(retrySecs));
             res.status(429).send('Too Many Requests');//might have to change
         }
