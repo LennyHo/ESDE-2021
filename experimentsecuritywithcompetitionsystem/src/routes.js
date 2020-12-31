@@ -16,7 +16,7 @@ exports.appRoute = router => {
 
     router.put('/api/user/', userController.processUpdateOneUser);
 
-    router.put('/api/user/design/', userController.processUpdateOneDesign);
+    router.put('/api/user/design/', filter.updateFileValidation, userController.processUpdateOneDesign);
 
     router.get('/api/user/process-search-design/:pagenumber/:search?', checkUserFn.getClientUserId, userController.processGetSubmissionData);
 
@@ -24,7 +24,7 @@ exports.appRoute = router => {
 
     router.get('/api/user/:recordId', userController.processGetOneUserData);
 
-    router.get('/api/user/design/:fileId', validation.getIdInfo, userController.processGetOneDesignData); 
+    router.get('/api/user/design/:fileId', validation.getIdInfo, userController.processGetOneDesignData);
 
 };
 

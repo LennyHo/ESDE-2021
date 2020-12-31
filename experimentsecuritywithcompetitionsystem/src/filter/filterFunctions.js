@@ -24,6 +24,30 @@ var filter = {
         }
     },
 
+    updateFileValidation: function (req, res, next) {
+
+        var designTitle = req.body.designTitle;
+        var designDescription = req.body.designDescription;
+
+        console.log('test 1');
+
+        var reDesignTitle = new RegExp(`^[A-Za-z0-9]$`);
+
+        var reDesignDescription = new RegExp(`^[A-Za-z0-9]$`);
+
+        console.log("finish regex");
+        if (reDesignTitle.test(designTitle) && reDesignDescription.test(designDescription)) {
+            console.log("finish testing");
+            next();
+        }
+
+        else {
+            res.status(500);
+            console.log("regex error");
+            res.send(`{"Message":"it is invalid. Please try again."}`);
+        }
+    },
+
     sanitizeResult: function (result) {
         for (var i = 0; i < result.length; i++) {
 

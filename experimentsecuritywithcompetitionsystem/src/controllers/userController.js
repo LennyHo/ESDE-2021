@@ -168,6 +168,7 @@ exports.processUpdateOneDesign = async (req, res, next) => {
     }
     try {
         results = await userManager.updateDesign(data);
+        filter.sanitizeResult(results);
         console.log(results);
         return res.status(200).json({ message: 'Completed update' });
     } catch (error) {
