@@ -5,32 +5,32 @@ const config = require('../config/config');
 const jwt = require('jsonwebtoken');
 const filter = require('../filter/filterFunctions');
 const pool = require('../config/database')
-const {RateLimiterMySQL} = require('rate-limiter-flexible');
+const { RateLimiterMySQL } = require('rate-limiter-flexible');
 
 const maxWrongAttemptsByIPperDay = 10;
 const maxConsecutiveFailsByUsernameAndIP = 3;
 
 const limiterSlowBruteByIP = new RateLimiterMySQL({
 
-  storeClient: pool,
-  dbName: 'rtlmtrflx',
-  tableName: 'login_fail_ip_per_day',
-  tableCreated: true,
-  points: maxWrongAttemptsByIPperDay, // 10 requests
-  duration: 60 * 60 * 24, // per 1 day by IP
-  blockDuration: 60 * 15//60 * 60 * 24  Block for 15 mins, if 10 wrong attempts per day
+    storeClient: pool,
+    dbName: 'rtlmtrflx',
+    tableName: 'login_fail_ip_per_day',
+    tableCreated: true,
+    points: maxWrongAttemptsByIPperDay, // 10 requests
+    duration: 60 * 60 * 24, // per 1 day by IP
+    blockDuration: 60 * 15//60 * 60 * 24  Block for 15 mins, if 10 wrong attempts per day
 
 });
 
 const limiterConsecutiveFailsByUsernameAndIP = new RateLimiterMySQL({
 
-  storeClient: pool,
-  dbName: 'rtlmtrflx',
-  tableName: 'login_fail_consecutive_username_and_ip',
-  tableCreated: true,
-  points: maxConsecutiveFailsByUsernameAndIP, // 3 requests
-  duration: 60 * 60 * 24 * 90, // Store number for 90 days since first fail
-  blockDuration: 60 * 5 // Block for 5 minutes
+    storeClient: pool,
+    dbName: 'rtlmtrflx',
+    tableName: 'login_fail_consecutive_username_and_ip',
+    tableCreated: true,
+    points: maxConsecutiveFailsByUsernameAndIP, // 3 requests
+    duration: 60 * 60 * 24 * 90, // Store number for 90 days since first fail
+    blockDuration: 60 * 5 // Block for 5 minutes
 
 });
 
@@ -39,17 +39,19 @@ const getUsernameIPkey = (username, ip) => `${username}_${ip}`;
 exports.processLogin = async (req, res, next) => {
 
     try {
-        console.log("test authenticating the user credentials.");
+        var date = new Date();
 
+        // credentials
         let ipAddr = req.ip;
         var email = req.body.email;
         var password = req.body.password;
 
-        console.log(email + " " + password);
+        console.log(date + '[' + ipAddr + ']' + " User is attempting to login.");
+        console.log(date + '[' + ipAddr + ']' + " User is entering the email: " + email);
+        console.log(date + '[' + ipAddr + ']' + " User is entering the password: " + password);
+
 
         const usernameIPkey = getUsernameIPkey(email, ipAddr);
-
-        console.log(usernameIPkey);
 
         const [resUsernameAndIP, resSlowByIP] = await Promise.all([
             limiterConsecutiveFailsByUsernameAndIP.get(usernameIPkey),
@@ -69,50 +71,41 @@ exports.processLogin = async (req, res, next) => {
 
         }
 
-        /*if (email == "") {
-
-            var date = new Date();
-            console.log(date + " User has not key in the email.");
-
-        } else if (password == "") {
-
-            date = new Date();
-            console.log(date + " User did not fill in the password.");
-
-        } else */if (retrySecs > 0) {
-
+        if (retrySecs > 0) {
             // If IP or Username + IP is already blocked send status 429
-            console.log("User IP/Email is already blocked.");//might have to change
+            date = new Date();
+            console.log(date + '[' + ipAddr + ']' + "User email is already blocked.");//might have to change
             res.set('Retry-After', String(retrySecs));
             res.status(429).send('Too Many Requests');//might have to change
-
         }
         else {
             // If not yet blocked authenticate login
-            console.log("going through authenticate");
+            var date = new Date();
+            console.log(date + '[' + ipAddr + ']' + " going through authenticate");
 
             auth.authenticate(email, async function (error, results) {
 
-                console.log("authenticate complete");
+                console.log(date + '[' + ipAddr + ']' + " authenticate complete");
 
                 if (error) {
                     try {
                         // let message = 'Credentials are not valid.';
-                        var date = new Date();
+                        date = new Date();
                         // For the console log to work just add if result != null beforehand
                         console.error(date + "User's email has failed to login.");
                         const promises = [limiterSlowBruteByIP.consume(ipAddr)];
                         await Promise.all(promises);
                         return res.status(500).json({ message: error });
 
-                    }  catch (rlRejected) {
+                    } catch (rlRejected) {
 
                         if (rlRejected instanceof Error) {
                             console.log("Error with limiter"); //if there is an error
                             throw rlRejected;
 
                         } else {
-                            console.log("User IP is blocked"); //user ip is blocked
+                            date = new Date();
+                            console.log(date + '[' + ipAddr + ']' + " User IP is blocked"); //user ip is blocked
                             res.set('Retry-After', String(Math.round(rlRejected.msBeforeNext / 1000)) || 1);
                             res.status(429).send('Too Many Requests');//might have to change
                         }
@@ -121,7 +114,6 @@ exports.processLogin = async (req, res, next) => {
                 else {
                     if (results.length === 1) {
                         date = new Date();
-                        // console.log(results);
 
                         if ((password[0] == null) || (results[0] == null)) {
                             try {
@@ -129,17 +121,17 @@ exports.processLogin = async (req, res, next) => {
                                 const promises = [limiterSlowBruteByIP.consume(ipAddr)];
                                 // Count failed attempts by Username + IP only for registered users
                                 promises.push(limiterConsecutiveFailsByUsernameAndIP.consume(usernameIPkey));
-                                console.log("heyheyuserneverENTERPASSWORD");
-                                console.error(date + 'A user has failed to login');
+                                console.error(date + '[' + ipAddr + ']' + 'A user password has failed to login because the password is empty.');
                                 return res.status(500).json({ message: 'login failed' });
-                            }  catch (rlRejected) {
-
+                            }
+                            catch (rlRejected) {
                                 if (rlRejected instanceof Error) {
                                     console.log("Error with limiter"); //if there is an error
                                     throw rlRejected;
-    
+
                                 } else {
-                                    console.log("User Email is blocked"); //user email is blocked
+                                    date = new Date();
+                                    console.log(date + '[' + results[0].user_id + ']' + ipAddr + " User Email is blocked"); //user email is blocked
                                     res.set('Retry-After', String(Math.round(rlRejected.msBeforeNext / 1000)) || 1);
                                     res.status(429).send('Too Many Requests');//might have to change
                                 }
@@ -164,15 +156,14 @@ exports.processLogin = async (req, res, next) => {
                             }; //End of data variable setup
 
                             // to display the log
-                            // console.log(date + "The password has sucessfully compared.");
-                            console.log(date + ' User [' + results[0].user_id + ']' + " has offically logged in");
+                            console.log(date + ' User [' + results[0].user_id + ']' + '[' + ipAddr + ']' + " has offically logged in");
 
                             return res.status(200).json(data);
 
                         }
                         else {
                             try {
-                                console.log("point 6");
+                                console.log(date + '[' + results[0].user_id + '] ' + '[' + ipAddr + ']' + " User key in an invalid password.");
                                 // Consume 1 point from limiters on wrong attempt and block if limits reached
                                 const promises = [limiterSlowBruteByIP.consume(ipAddr)];
                                 // Count failed attempts by Username + IP only for registered users
@@ -185,8 +176,9 @@ exports.processLogin = async (req, res, next) => {
                                 if (rlRejected instanceof Error) {
                                     console.log("Error with limiter");
                                     throw rlRejected;
-                                }   else {
-                                    console.log("User Email is blocked");
+                                } else {
+                                    date = new Date();
+                                    console.log(date + '[' + results[0].user_id + '] ' + '[' + ipAddr + ']' + " User Email is blocked");
                                     res.set('Retry-After', String(Math.round(rlRejected.msBeforeNext / 1000)) || 1);
                                     res.status(429).send('Too Many Requests');
                                 }
