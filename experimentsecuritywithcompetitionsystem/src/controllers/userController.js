@@ -1,7 +1,8 @@
 const userManager = require('../services/userService');
 const fileDataManager = require('../services/fileService');
 const config = require('../config/config');
-const validation = require('../validationFn/jsonwebtoken');
+// const validation = require('../validationFn/jsonwebtoken');
+const filter = require("../filter/filterFunctions");
 
 // 
 exports.processDesignSubmission = (req, res, next) => {
@@ -170,6 +171,7 @@ exports.processUpdateOneDesign = async (req, res, next) => {
         results = await userManager.updateDesign(data);
         filter.sanitizeResult(results);
         console.log(results);
+        // console.log("here is the result");
         return res.status(200).json({ message: 'Completed update' });
     } catch (error) {
         console.log('processUpdateOneUser method : catch block section code is running');
