@@ -1,7 +1,7 @@
 
 const express = require('express');
 const serveStatic = require('serve-static');
-
+const helmet = require('helmet');
 
 var hostname = "localhost";
 var port = 3001;
@@ -40,8 +40,13 @@ app.use(function (req, res, next) {
     next();
 });
 
-
-
+// const app = express();
+app.use(helmet());
+// to prevent from clickjacking
+app.use(helmet.frameguard({
+    action: "deny",
+})
+);
 
 app.listen(port, hostname, function () {
 

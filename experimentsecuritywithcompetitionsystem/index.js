@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require('cors')
 const config = require('./src/config/config');
 const formData = require('express-form-data');
-const helmet = require('helmet');
+
 //const dummyUserFn = require('./src/middlewares/dummyUserFn');
 
 let app = express();
@@ -39,6 +39,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //has file submission functionality.
 //app.use(express.json());
 //app.use(express.urlencoded({ extended: true }));
+
+app.use(function (req, res, next) {
+    res.setHeader("Content-Security-Policy", "frame-ancestors 'none';");
+    next();
+});
 
 
 //Express Router
@@ -81,19 +86,8 @@ process.on('uncaughtException', function (error, origin) {
 
 
 
-app.use(function (req, res, next) {
-    res.setHeader("Content-Security-Policy", "frame-ancestors 'none';");
-    next();
-});
 
-// const app = express();
-app.use(helmet());
-// to prevent from clickjacking
-app.use(
-    helmet.frameguard({
-        action: "deny",
-    })
-);
+
 
 
 app.listen(PORT, err => {
