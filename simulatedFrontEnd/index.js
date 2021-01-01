@@ -2,13 +2,19 @@
 const express = require('express');
 const serveStatic = require('serve-static');
 const helmet = require('helmet');
-
 var hostname = "localhost";
 var port = 3001;
 
 
+// // x-frame option
+// app.use(function (req, res, next) {
+//     res.setHeader('X-Frame-Options', 'deny');
+//     next();
+// });
+
 var app = express();
 
+// to prevent from clickjacking
 
 app.use(function (req, res, next) {
     console.log(req.url);
@@ -26,6 +32,7 @@ app.use(function (req, res, next) {
 });
 
 
+
 app.use(serveStatic(__dirname + "/public"));
 
 
@@ -33,20 +40,8 @@ app.get("/", (req, res) => {
     res.sendFile("/public/home.html", { root: __dirname });
 });
 
+app.use(helmet.frameguard({ action: 'deny' }));
 
-// x-frame option
-app.use(function (req, res, next) {
-    res.setHeader('X-Frame-Options', 'deny');
-    next();
-});
-
-// const app = express();
-app.use(helmet());
-// to prevent from clickjacking
-app.use(helmet.frameguard({
-    action: "deny",
-})
-);
 
 app.listen(port, hostname, function () {
 
