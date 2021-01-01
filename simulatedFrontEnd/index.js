@@ -1,32 +1,32 @@
 
-const express=require('express');
-const serveStatic=require('serve-static');
+const express = require('express');
+const serveStatic = require('serve-static');
 
 
-var hostname="localhost";
-var port=3001;
+var hostname = "localhost";
+var port = 3001;
 
 
-var app=express();
+var app = express();
 
 
-app.use(function(req,res,next){
+app.use(function (req, res, next) {
     console.log(req.url);
     console.log(req.method);
     console.log(req.path);
     console.log(req.query.id);
     //Checking the incoming request type from the client
-    if(req.method!="GET"){
+    if (req.method != "GET") {
         res.type('.html');
-        var msg='<html><body>This server only serves web pages with GET request</body></html>';
+        var msg = '<html><body>This server only serves web pages with GET request</body></html>';
         res.end(msg);
-    }else{
+    } else {
         next();
     }
 });
 
 
-app.use(serveStatic(__dirname+"/public"));
+app.use(serveStatic(__dirname + "/public"));
 
 
 app.get("/", (req, res) => {
@@ -34,7 +34,16 @@ app.get("/", (req, res) => {
 });
 
 
-app.listen(port,hostname,function(){
+// x-frame option
+app.use(function (req, res, next) {
+    res.setHeader('X-Frame-Options', 'deny');
+    next();
+});
+
+
+
+
+app.listen(port, hostname, function () {
 
     console.log(`Server hosted at http://${hostname}:${port}`);
 });

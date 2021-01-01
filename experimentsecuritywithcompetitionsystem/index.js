@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require('cors')
 const config = require('./src/config/config');
 const formData = require('express-form-data');
+const helmet = require('helmet');
 //const dummyUserFn = require('./src/middlewares/dummyUserFn');
 
 let app = express();
@@ -79,17 +80,20 @@ process.on('uncaughtException', function (error, origin) {
 })
 
 
-// x-frame option
-// app.use(function (req, res, next) {
-//     res.setHeader('X-Frame-Options', 'sameorigin');
-//     next();
-// });
-
 
 app.use(function (req, res, next) {
     res.setHeader("Content-Security-Policy", "frame-ancestors 'none';");
     next();
 });
+
+// const app = express();
+app.use(helmet());
+// to prevent from clickjacking
+app.use(
+    helmet.frameguard({
+        action: "deny",
+    })
+);
 
 
 app.listen(PORT, err => {
