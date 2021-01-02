@@ -172,7 +172,6 @@ exports.processLogin = async (req, res, next) => {
                                 // return res.status(500).json({ message: 'Login has failed.' });
                                 return res.status(500).json({ message: error });
                             } catch (rlRejected) {
-
                                 if (rlRejected instanceof Error) {
                                     console.log("Error with limiter");
                                     throw rlRejected;
