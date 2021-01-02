@@ -8,6 +8,8 @@ var port = 3001;
 const https = require('https');
 const fs = require('fs');
 
+
+
 const options = {
     key: fs.readFileSync("../cert/demo.local.key"),
     cert: fs.readFileSync("../cert/demo.local.crt")
@@ -20,8 +22,6 @@ const options = {
 // });
 
 var app = express();
-
-// to prevent from clickjacking
 
 app.use(function (req, res, next) {
     console.log(req.url);
@@ -38,19 +38,18 @@ app.use(function (req, res, next) {
     }
 });
 
-
-
 app.use(serveStatic(__dirname + "/public"));
 
+// to prevent from clickjacking
+app.use(helmet.frameguard({
+    action: 'deny'
+}));
 
 app.get("/", (req, res) => {
     res.sendFile("/public/home.html", { root: __dirname });
 });
 
-app.use(helmet.frameguard({ action: 'deny' }));
-
-
-https.createServer(options,app).listen(port,hostname,function(){
+https.createServer(options, app).listen(port, hostname, function () {
 
     console.log(`Server hosted at https://${hostname}:${port}`);
 });
