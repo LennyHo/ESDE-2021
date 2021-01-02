@@ -1,14 +1,12 @@
 
 const express = require('express');
 const serveStatic = require('serve-static');
-const helmet = require('helmet');
+var helmet = require('helmet');
 var hostname = "localhost";
 var port = 3001;
 
 const https = require('https');
 const fs = require('fs');
-
-
 
 const options = {
     key: fs.readFileSync("../cert/demo.local.key"),
@@ -38,12 +36,15 @@ app.use(function (req, res, next) {
     }
 });
 
-app.use(serveStatic(__dirname + "/public"));
-
 // to prevent from clickjacking
+app.disable("x-powered-by");
 app.use(helmet.frameguard({
     action: 'deny'
 }));
+
+app.use(serveStatic(__dirname + "/public"));
+
+
 
 app.get("/", (req, res) => {
     res.sendFile("/public/home.html", { root: __dirname });
