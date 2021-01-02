@@ -5,6 +5,13 @@ const helmet = require('helmet');
 var hostname = "localhost";
 var port = 3001;
 
+const https = require('https');
+const fs = require('fs');
+
+const options = {
+    key: fs.readFileSync("../cert/demo.local.key"),
+    cert: fs.readFileSync("../cert/demo.local.crt")
+};
 
 // // x-frame option
 // app.use(function (req, res, next) {
@@ -43,7 +50,7 @@ app.get("/", (req, res) => {
 app.use(helmet.frameguard({ action: 'deny' }));
 
 
-app.listen(port, hostname, function () {
+https.createServer(options,app).listen(port,hostname,function(){
 
-    console.log(`Server hosted at http://${hostname}:${port}`);
+    console.log(`Server hosted at https://${hostname}:${port}`);
 });

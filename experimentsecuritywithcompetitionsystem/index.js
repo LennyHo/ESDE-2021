@@ -3,6 +3,14 @@ const cors = require('cors')
 const config = require('./src/config/config');
 const formData = require('express-form-data');
 
+const https = require('https');
+const fs = require('fs');
+
+const options = {
+    key: fs.readFileSync("../cert/demo.local.key"),
+    cert: fs.readFileSync("../cert/demo.local.crt")
+};
+
 //const dummyUserFn = require('./src/middlewares/dummyUserFn');
 
 let app = express();
@@ -90,7 +98,7 @@ process.on('uncaughtException', function (error, origin) {
 
 
 
-app.listen(PORT, err => {
+https.createServer(options,app).listen(PORT, err => {
     if (err) return console.log(`Cannot Listen on PORT: ${PORT}`);
-    console.log(`Server is Listening on: http://localhost:${PORT}/`);
+    console.log(`Server is Listening on: https://localhost:${PORT}/`);
 });
