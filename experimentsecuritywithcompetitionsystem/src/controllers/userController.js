@@ -15,6 +15,7 @@ exports.processDesignSubmission = (req, res, next) => {
         console.log('check error variable in fileDataManager.upload code block\n', error);
         let uploadResult = result;
         if (error) {
+            console.log(error);
             let message = 'Unable to complete file submission.';
             res.status(500).json({ message: message });
             res.end();
@@ -33,6 +34,7 @@ exports.processDesignSubmission = (req, res, next) => {
                     res.status(200).json({ message: message, imageURL: imageURL });
                 }
             } catch (error) {
+                console.log(error);
                 let message = 'File submission failed.';
                 res.status(500).json({
                     message: message
@@ -51,17 +53,18 @@ exports.processGetSubmissionData = async (req, res, next) => {
         console.log('Inspect result variable inside processGetSubmissionData code\n', results);
         if (results) {
             var jsonResult = {
-                'number_of_records': results[0].length,
-                'page_number': pageNumber,
-                'filedata': results[0],
-                'total_number_of_records': results[2][0].total_records
+                number_of_records: results[0].length,
+                page_number: pageNumber,
+                filedata: results[0],
+                total_number_of_records: results[2][0].total_records
             }
             return res.status(200).json(jsonResult);
         }
     } catch (error) {
+        console.log(error);
         let message = 'Server is unable to process your request.';
         return res.status(500).json({
-            message: error
+            message: message
         });
     }
 
@@ -76,17 +79,18 @@ exports.processGetUserData = async (req, res, next) => {
         console.log('Inspect result variable inside processGetUserData code\n', results);
         if (results) {
             var jsonResult = {
-                'number_of_records': results[0].length,
-                'page_number': pageNumber,
-                'userdata': results[0],
-                'total_number_of_records': results[2][0].total_records
+                number_of_records: results[0].length,
+                page_number: pageNumber,
+                userdata: results[0],
+                total_number_of_records: results[2][0].total_records
             }
             return res.status(200).json(jsonResult);
         }
     } catch (error) {
+        console.log(error);
         let message = 'Server is unable to process your request.';
         return res.status(500).json({
-            message: error
+            message: message
         });
     }
 
@@ -100,14 +104,15 @@ exports.processGetOneUserData = async (req, res, next) => {
         console.log('Inspect result variable inside processGetOneUserData code\n', results);
         if (results) {
             var jsonResult = {
-                'userdata': results[0],
-            }
+                userdata: results[0],
+            };
             return res.status(200).json(jsonResult);
         }
     } catch (error) {
+        console.log(error);
         let message = 'Server is unable to process your request.';
         return res.status(500).json({
-            message: error
+            message: message
         });
     }
 
@@ -125,7 +130,8 @@ exports.processUpdateOneUser = async (req, res, next) => {
     } catch (error) {
         console.log('processUpdateOneUser method : catch block section code is running');
         console.log(error, '=======================================================================');
-        return res.status(500).json({ message: 'Unable to complete update operation' });
+        let message = 'Unable to complete update operation'
+        return res.status(500).json({ message: message });
     }
 
 
@@ -139,21 +145,23 @@ exports.processGetOneDesignData = async (req, res, next) => {
         if (results) {
             console.log("Hello " + req.id);
             if (results[0].created_by_id == req.id) {
-                console.log({ 'message': 'it is sucessfully verified' });
+                console.log({ message: 'it is sucessfully verified' });
             } else {
                 // console.log("it is not authorized.");
-                return res.status(500).json({ 'message': 'it is not authorized.' });
+                let message = 'it is not authorized.'
+                return res.status(500).json({ message: message });
             }
 
             var jsonResult = {
-                'filedata': results[0],
+                filedata: results[0],
             }
             return res.status(200).json(jsonResult);
         }
     } catch (error) {
+        console.log(error);
         let message = 'Server is unable to process the request.';
         return res.status(500).json({
-            message: error
+            message: message
         });
     }
 
@@ -166,7 +174,7 @@ exports.processUpdateOneDesign = async (req, res, next) => {
         design_title: req.body.designTitle,
         design_description: req.body.designDescription,
         file_id: req.body.fileId
-    }
+    };
     try {
         results = await userManager.updateDesign(data);
         filter.sanitizeResult(results);

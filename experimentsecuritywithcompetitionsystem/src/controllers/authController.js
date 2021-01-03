@@ -29,7 +29,7 @@ const limiterConsecutiveFailsByUsernameAndIP = new RateLimiterMySQL({
     tableName: 'login_fail_consecutive_username_and_ip',
     tableCreated: true,
     points: maxConsecutiveFailsByUsernameAndIP, // 3 requests
-    duration: 60 * 60 * 24 * 90, // Store number for 90 days since first fail
+    duration: 60 * 60 * 24, // Store number for 1 day since first fail
     blockDuration: 60 * 5 // Block for 5 minutes
 
 });
@@ -74,9 +74,10 @@ exports.processLogin = async (req, res, next) => {
         if (retrySecs > 0) {
             // If IP or Username + IP is already blocked send status 429
             date = new Date();
-            console.log(date + '[' + ipAddr + ']' + " User email is already blocked.");//might have to change
+            console.log(date + '[' + ipAddr + ']' + " User email is already blocked.");
             res.set('Retry-After', String(retrySecs));
-            res.status(429).send('Too Many Requests');//might have to change
+            let message = 'Too Many Requests';
+            res.status(429).json({ message: message });
         }
         else {
             // If not yet blocked authenticate login
@@ -95,7 +96,8 @@ exports.processLogin = async (req, res, next) => {
                         console.error(date + "User's email has failed to login.");
                         const promises = [limiterSlowBruteByIP.consume(ipAddr)];
                         await Promise.all(promises);
-                        return res.status(500).json({ message: error });
+                        let message = 'Login has failed';
+                        return res.status(500).json({ message: message });
 
                     } catch (rlRejected) {
 
@@ -107,7 +109,8 @@ exports.processLogin = async (req, res, next) => {
                             date = new Date();
                             console.log(date + '[' + ipAddr + ']' + " User IP is blocked"); //user ip is blocked
                             res.set('Retry-After', String(Math.round(rlRejected.msBeforeNext / 1000)) || 1);
-                            res.status(429).send('Too Many Requests');//might have to change
+                            let message = 'Too Many Requests';
+                            res.status(429).json({ message: message });
                         }
                     }
                 }
@@ -116,26 +119,9 @@ exports.processLogin = async (req, res, next) => {
                         date = new Date();
 
                         if ((password[0] == null) || (results[0] == null)) {
-                            try {
-                                // Consume 1 point from limiters on wrong attempt and block if limits reached
-                                const promises = [limiterSlowBruteByIP.consume(ipAddr)];
-                                // Count failed attempts by Username + IP only for registered users
-                                promises.push(limiterConsecutiveFailsByUsernameAndIP.consume(usernameIPkey));
-                                console.error(date + '[' + ipAddr + ']' + 'A user password has failed to login because the password is empty.');
-                                return res.status(500).json({ message: 'login failed' });
-                            }
-                            catch (rlRejected) {
-                                if (rlRejected instanceof Error) {
-                                    console.log("Error with limiter"); //if there is an error
-                                    throw rlRejected;
-
-                                } else {
-                                    date = new Date();
-                                    console.log(date + '[' + results[0].user_id + ']' + ipAddr + " User Email is blocked"); //user email is blocked
-                                    res.set('Retry-After', String(Math.round(rlRejected.msBeforeNext / 1000)) || 1);
-                                    res.status(429).send('Too Many Requests');//might have to change
-                                }
-                            }
+                            console.error(date + '[' + ipAddr + ']' + 'A user password has failed to login because the password is empty.');
+                            let message = 'Login has failed';
+                            return res.status(500).json({ message: message });
                         }//End of checking if there are returned SQL results
 
                         if (bcrypt.compareSync(password, results[0].user_password) == true) {
@@ -170,7 +156,8 @@ exports.processLogin = async (req, res, next) => {
                                 promises.push(limiterConsecutiveFailsByUsernameAndIP.consume(usernameIPkey));
                                 await Promise.all(promises);
                                 // return res.status(500).json({ message: 'Login has failed.' });
-                                return res.status(500).json({ message: error });
+                                let message = 'Login has failed';
+                                return res.status(500).json({ message: message });
                             } catch (rlRejected) {
                                 if (rlRejected instanceof Error) {
                                     console.log("Error with limiter");
@@ -179,7 +166,8 @@ exports.processLogin = async (req, res, next) => {
                                     date = new Date();
                                     console.log(date + '[' + results[0].user_id + '] ' + '[' + ipAddr + ']' + " User Email is blocked");
                                     res.set('Retry-After', String(Math.round(rlRejected.msBeforeNext / 1000)) || 1);
-                                    res.status(429).send('Too Many Requests');
+                                    let message = 'Too Many Requests';
+                                    res.status(429).json({ message: message });
                                 }
                             }
                         }//End of passowrd comparison with the retrieved decoded password.
@@ -190,7 +178,9 @@ exports.processLogin = async (req, res, next) => {
         }
 
     } catch (error) {
-        return res.status(500).json({ message: error });
+        console.log(error);
+        let message = 'Server is unable to process your request.';
+        return res.status(500).json({ message: message });
     } //end of try
 };
 
@@ -206,14 +196,16 @@ exports.processRegister = (req, res, next) => {
         if (err) {
             console.log("welp");
             console.log('Error on hashing password');
-            return res.status(500).json({ message: 'Unable to complete registration' });
+            let message = 'Completed registration';
+            return res.status(500).json({ message: message });
         }
         else {
             try {
                 var results = await user.createUser(fullName, email, hash);
                 filter.sanitizeResult(results);
                 // console.log(results);
-                return res.status(200).json({ message: 'Completed registration' });
+                let message = 'Completed registration';
+                return res.status(200).json({ message: message });
             } catch (error) {
                 console.log('processRegister method : catch block section code is running');
                 console.log(error, '=======================================================================');
