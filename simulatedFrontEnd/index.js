@@ -13,12 +13,6 @@ const options = {
     cert: fs.readFileSync("../cert/demo.local.crt")
 };
 
-// // x-frame option
-// app.use(function (req, res, next) {
-//     res.setHeader('X-Frame-Options', 'deny');
-//     next();
-// });
-
 var app = express();
 
 app.use(function (req, res, next) {
@@ -37,7 +31,6 @@ app.use(function (req, res, next) {
 });
 
 // to prevent from clickjacking
-app.disable("x-powered-by");
 app.use(helmet.frameguard({
     action: 'deny'
 }));

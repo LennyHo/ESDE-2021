@@ -1,6 +1,7 @@
 const validator = require('validator');
 
 var filter = {
+    //Input validation for register.html
     validationRegister: function (req, res, next) {
 
         var userName = req.body.fullName;
@@ -23,7 +24,7 @@ var filter = {
             res.send(`{"Message":"it is invalid. Please try again."}`);
         }
     },
-
+    //Input validation for update_design.html
     updateFileValidation: function (req, res, next) {
 
         var designTitle = req.body.designTitle;
@@ -47,7 +48,7 @@ var filter = {
             res.send(`{"Message":"it is invalid. Please try again."}`);
         }
     },
-
+    //Output Sanitization
     sanitizeResult: function (result) {
         for (var i = 0; i < result.length; i++) {
 
