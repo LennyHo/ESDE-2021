@@ -5,11 +5,11 @@ const config = require('./config');
 
 const pool = mysql.createPool({
         connectionLimit: 100,
-        host: 'localhost',
-        user: config.databaseUserName,
-        password: config.databasePassword,
-        database: config.databaseName,
+        host: 'esde-ca1.cukxmrlijhch.us-east-1.rds.amazonaws.com',
+        user: 'admin',
+        password: 'admin1234',
+        // database: '',
         multipleStatements: true
-    });
+});
 
- module.exports=pool;
+module.exports = pool;

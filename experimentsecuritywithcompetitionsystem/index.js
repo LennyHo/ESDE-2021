@@ -7,7 +7,7 @@ const https = require('https');
 const fs = require('fs');
 
 const options = {
-    key: fs.readFileSync("../cert/demo.local.key"),
+    key: fs.readFileSync("../cert/demo.local.csr"),
     cert: fs.readFileSync("../cert/demo.local.crt")
 };
 
@@ -94,11 +94,8 @@ process.on('uncaughtException', function (error, origin) {
 
 
 
-
-
-
-
 https.createServer(options,app).listen(PORT, err => {
     if (err) return console.log(`Cannot Listen on PORT: ${PORT}`);
     console.log(`Server is Listening on: https://localhost:${PORT}/`);
 });
+
