@@ -1,22 +1,22 @@
 let $profileContainer = $('#profileContainer');
 if ($profileContainer.length != 0) {
     console.log('Profile page is detected. Binding event handling logic to form elements.');
-    $('#backButton').on("click", function(e){
+    $('#backButton').on("click", function(e) {
         e.preventDefault();
         window.history.back();
     });
 
     function getOneUser() {
 
-        const baseUrl = 'https://localhost:5000';
+        const baseUrl = 'http://54.227.195.254:5000';
 
         let userId = localStorage.getItem('user_id');
         axios({
-            headers: {
-             'user': userId
-            },
-            method: 'get',
-            url: baseUrl + '/api/user/' + userId,
+                headers: {
+                    'user': userId
+                },
+                method: 'get',
+                url: baseUrl + '/api/user/' + userId,
             })
             .then(function(response) {
                 //Using the following to inspect the response.data data structure

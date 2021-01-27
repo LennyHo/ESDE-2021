@@ -5,13 +5,13 @@ var helmet = require('helmet');
 var hostname = "localhost";
 var port = 3001;
 
-const https = require('https');
-const fs = require('fs');
+// const https = require('https');
+// const fs = require('fs');
 
-const options = {
-    key: fs.readFileSync("../cert/demo.local.key"),
-    cert: fs.readFileSync("../cert/demo.local.crt")
-};
+// const options = {
+//     key: fs.readFileSync("../cert/demo.local.key"),
+//     cert: fs.readFileSync("../cert/demo.local.crt")
+// };
 
 var app = express();
 
@@ -43,7 +43,7 @@ app.get("/", (req, res) => {
     res.sendFile("/public/home.html", { root: __dirname });
 });
 
-https.createServer(options, app).listen(port, hostname, function () {
+app.listen(port, hostname, function () {
 
-    console.log(`Server hosted at https://${hostname}:${port}`);
+    console.log(`Server hosted at http://${hostname}:${port}`);
 });

@@ -13,6 +13,7 @@ cloudinary.config({
     api_secret: config.cloudinaryApiSecret,
     upload_preset: 'upload_to_design'
 });
+
 async function prepareRitaDataAndFiles() {
     try {
         let createUserResult = await createUser('rita', 'rita@designer.com', '$2b$10$K.0HwpsoPDGaB/atFBmmXOGTw4ceeg33.WrxJx/FeC9.gCyYvIbs6', 2);

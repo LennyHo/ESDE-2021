@@ -48,7 +48,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //app.use(express.json());
 //app.use(express.urlencoded({ extended: true }));
 
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
     res.setHeader("Content-Security-Policy", "frame-ancestors 'none';");
     next();
 });
@@ -81,7 +81,7 @@ router.use((err, req, res, next) => {
     }
 });
 
-process.on('uncaughtException', function (error, origin) {
+process.on('uncaughtException', function(error, origin) {
     //Handle the error safely. 
     //Developer note: As long as you have callback hell, the error handling code
     //will break. This often occurs during team development.
@@ -93,9 +93,7 @@ process.on('uncaughtException', function (error, origin) {
 })
 
 
-
-https.createServer(options,app).listen(PORT, err => {
+app.listen(PORT, err => {
     if (err) return console.log(`Cannot Listen on PORT: ${PORT}`);
-    console.log(`Server is Listening on: https://localhost:${PORT}/`);
+    console.log(`Server is Listening on: http://localhost:${PORT}/`);
 });
-

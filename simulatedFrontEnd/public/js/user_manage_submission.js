@@ -6,7 +6,7 @@ if ($searchDesignFormContainer.length != 0) {
     //to server-side api when the #submitButton element fires the click event.
     $('#submitButton').on('click', function(event) {
         event.preventDefault();
-        const baseUrl = 'https://localhost:5000';
+        const baseUrl = 'http://54.227.195.254:5000';
         let searchInput = $('#searchInput').val();
         let userId = localStorage.getItem('user_id');
         axios({

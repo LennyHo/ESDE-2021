@@ -4,22 +4,22 @@ if ($loginFormContainer.length != 0) {
     //If the jQuery object which represents the form element exists,
     //the following code will create a method to submit registration details
     //to server-side api when the #submitButton element fires the click event.
-    $('#submitButton').on('click', function (event) {
+    $('#submitButton').on('click', function(event) {
         event.preventDefault();
-        const baseUrl = 'https://localhost:5000';
+        const baseUrl = 'http://54.227.195.254:5000';
         let email = $('#emailInput').val();
         let password = $('#passwordInput').val();
         let webFormData = new FormData();
         webFormData.append('email', email);
         webFormData.append('password', password);
         axios({
-            method: 'post',
-            url: baseUrl + '/api/user/login',
-            data: webFormData,
-            headers: { 'Content-Type': 'multipart/form-data' }
-        })
+                method: 'post',
+                url: baseUrl + '/api/user/login',
+                data: webFormData,
+                headers: { 'Content-Type': 'multipart/form-data' }
+            })
 
-            .then(function (response) {
+            .then(function(response) {
                 //Inspect the object structure of the response object.
                 //console.log('Inspecting the respsone object returned from the login web api');
                 //console.dir(response);
@@ -39,7 +39,7 @@ if ($loginFormContainer.length != 0) {
                     return;
                 }
             })
-            .catch(function (response) {
+            .catch(function(response) {
                 //Handle error
                 console.dir(response);
                 new Noty({
