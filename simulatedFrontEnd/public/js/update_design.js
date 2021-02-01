@@ -4,10 +4,9 @@ if ($updateDesignFormContainer.length != 0) {
     //If the jQuery object which represents the form element exists,
     //the following code will create a method to submit design details
     //to server-side api when the #submitButton element fires the click event.
-    $('#submitButton').on('click', function (event) {
+    $('#submitButton').on('click', function(event) {
         event.preventDefault();
-        const baseUrl = 'http://54.227.195.254:5000';
-        //Collect fileId value from the input element, fileIdInput (hidden input element)
+        const baseUrl = baseURL; //Collect fileId value from the input element, fileIdInput (hidden input element)
         let fileId = $('#fileIdInput').val();
         //Obtain user id from local storage
         let userId = localStorage.getItem('user_id');
@@ -21,12 +20,12 @@ if ($updateDesignFormContainer.length != 0) {
         webFormData.append('designDescription', designDescription);
         webFormData.append('fileId', fileId);
         axios({
-            method: 'put',
-            url: baseUrl + '/api/user/design/',
-            data: webFormData,
-            headers: { 'Content-Type': 'multipart/form-data', 'user': userId }
-        })
-            .then(function (response) {
+                method: 'put',
+                url: baseUrl + '/api/user/design/',
+                data: webFormData,
+                headers: { 'Content-Type': 'multipart/form-data', 'user': userId }
+            })
+            .then(function(response) {
                 new Noty({
                     type: 'success',
                     layout: 'topCenter',
@@ -35,7 +34,7 @@ if ($updateDesignFormContainer.length != 0) {
                     text: 'Updated design information.',
                 }).show();
             })
-            .catch(function (response) {
+            .catch(function(response) {
                 //Handle error
                 console.dir(response);
                 new Noty({
@@ -48,13 +47,13 @@ if ($updateDesignFormContainer.length != 0) {
 
             });
     });
-    $('#backButton').on("click", function (e) {
+    $('#backButton').on("click", function(e) {
         e.preventDefault();
         window.history.back();
     });
 
     function getOneData() {
-        const baseUrl = 'https://localhost:5000';
+        const baseUrl = baseURL;
         //Get the fileId information from the web browser URL textbox
         let query = window.location.search.substring(1);
         let arrayData = query.split("=");
@@ -62,14 +61,14 @@ if ($updateDesignFormContainer.length != 0) {
         console.dir('Obtained file id from URL : ', fileId);
         let userId = localStorage.getItem('user_id'); // f**k you, localstorage! not today
         axios({
-            headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token'),
-                'user': userId
-            },
-            method: 'get',
-            url: baseUrl + '/api/user/design/' + fileId,
-        })
-            .then(function (response) {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    'user': userId
+                },
+                method: 'get',
+                url: baseUrl + '/api/user/design/' + fileId,
+            })
+            .then(function(response) {
                 //Using the following to inspect the response.data data structure
                 //before deciding the code which dynamically populate the elements with data.
                 console.dir(response.data);
@@ -81,7 +80,7 @@ if ($updateDesignFormContainer.length != 0) {
 
                 $('#designImage').attr('src', record.cloudinary_url).focus();
             })
-            .catch(function (response) {
+            .catch(function(response) {
                 //Handle error
                 console.dir(response);
                 new Noty({

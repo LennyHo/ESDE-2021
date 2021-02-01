@@ -6,8 +6,7 @@ if ($updateUserFormContainer.length != 0) {
     //to server-side api when the #submitButton element fires the click event.
     $('#submitButton').on('click', function(event) {
         event.preventDefault();
-        const baseUrl = 'http://54.227.195.254:5000';
-        //Collect role id value from the input element, roleIdInput
+        const baseUrl = baseURL;
         let roleId = $('#roleIdInput').val();
         //Obtain user id from local storage
         let userId = localStorage.getItem('user_id');
@@ -51,7 +50,7 @@ if ($updateUserFormContainer.length != 0) {
 
     function getOneUser() {
 
-        const baseUrl = 'https://localhost:5000';
+        const baseUrl = baseURL;
         var query = window.location.search.substring(1);
         let arrayData = query.split("=");
         let recordIdToSearchUserRecord = arrayData[1];

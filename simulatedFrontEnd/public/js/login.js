@@ -6,7 +6,7 @@ if ($loginFormContainer.length != 0) {
     //to server-side api when the #submitButton element fires the click event.
     $('#submitButton').on('click', function(event) {
         event.preventDefault();
-        const baseUrl = 'http://54.227.195.254:5000';
+        const baseUrl = baseURL;
         let email = $('#emailInput').val();
         let password = $('#passwordInput').val();
         let webFormData = new FormData();
