@@ -5,9 +5,9 @@ const config = require('./config');
 
 const pool = mysql.createPool({
         connectionLimit: 100,
-        host: 'esdeca1-secretmanager.cukxmrlijhch.us-east-1.rds.amazonaws.com',
-        user: 'encrypted_user',
-        password: 'password',
+        host: "esdeca1-secretmanager.cukxmrlijhch.us-east-1.rds.amazonaws.com",
+        user: config.databaseUserName,
+        password: config.databasePassword,
         database: config.databaseName,
         multipleStatements: true
 });

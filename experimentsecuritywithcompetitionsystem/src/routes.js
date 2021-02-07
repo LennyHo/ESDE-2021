@@ -4,13 +4,13 @@ const userController = require('./controllers/userController');
 const checkUserFn = require('./middlewares/checkUserFn');
 const filter = require('./filter/filterFunctions');
 const validation = require('./validationFn/jsonwebtoken');
-
+// filter.validationRegister,
 // Match URL's with controllers
 exports.appRoute = router => {
 
-    router.post('/api/user/login', authController.processLogin);
+    router.post('/api/user/login',authController.processLogin);
 
-    router.post('/api/user/register', filter.validationRegister, authController.processRegister);
+    router.post('/api/user/register', authController.processRegister);
 
     router.post('/api/user/process-submission', checkUserFn.getClientUserId, userController.processDesignSubmission);
 

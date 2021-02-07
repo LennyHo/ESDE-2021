@@ -20,6 +20,7 @@ var filter = {
             next();
         }
         else {
+            console.log("error");
             res.status(500);
             res.send(`{"Message":"it is invalid. Please try again."}`);
         }
