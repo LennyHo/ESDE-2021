@@ -10,7 +10,7 @@ exports.processDesignSubmission = (req, res, next) => {
     let designDescription = req.body.designDescription;
     let userId = req.body.userId;
     let file = req.body.file;
-    fileDataManager.uploadFile(file, async function (error, result) {
+    fileDataManager.uploadFile(file, async function(error, result) {
         console.log('check result variable in fileDataManager.upload code block\n', result);
         console.log('check error variable in fileDataManager.upload code block\n', error);
         let uploadResult = result;
@@ -19,7 +19,8 @@ exports.processDesignSubmission = (req, res, next) => {
             let message = 'Unable to complete file submission.';
             res.status(500).json({ message: message });
             res.end();
-        } else {
+        }
+        else {
             //Update the file table inside the MySQL when the file image
             //has been saved at the cloud storage (Cloudinary)
             let imageURL = uploadResult.imageURL;
@@ -33,7 +34,8 @@ exports.processDesignSubmission = (req, res, next) => {
                     let message = 'File submission completed.';
                     res.status(200).json({ message: message, imageURL: imageURL });
                 }
-            } catch (error) {
+            }
+            catch (error) {
                 console.log(error);
                 let message = 'File submission failed.';
                 res.status(500).json({
@@ -44,7 +46,7 @@ exports.processDesignSubmission = (req, res, next) => {
     })
 }; //End of processDesignSubmission
 
-exports.processGetSubmissionData = async (req, res, next) => {
+exports.processGetSubmissionData = async(req, res, next) => {
     let pageNumber = req.params.pagenumber;
     let search = req.params.search;
     let userId = req.body.userId;
@@ -60,7 +62,8 @@ exports.processGetSubmissionData = async (req, res, next) => {
             }
             return res.status(200).json(jsonResult);
         }
-    } catch (error) {
+    }
+    catch (error) {
         console.log(error);
         let message = 'Server is unable to process your request.';
         return res.status(500).json({
@@ -70,7 +73,7 @@ exports.processGetSubmissionData = async (req, res, next) => {
 
 }; //End of processGetSubmissionData
 
-exports.processGetUserData = async (req, res, next) => {
+exports.processGetUserData = async(req, res, next) => {
     let pageNumber = req.params.pagenumber;
     let search = req.params.search;
 
@@ -86,7 +89,8 @@ exports.processGetUserData = async (req, res, next) => {
             }
             return res.status(200).json(jsonResult);
         }
-    } catch (error) {
+    }
+    catch (error) {
         console.log(error);
         let message = 'Server is unable to process your request.';
         return res.status(500).json({
@@ -96,7 +100,7 @@ exports.processGetUserData = async (req, res, next) => {
 
 }; //End of processGetUserData
 
-exports.processGetOneUserData = async (req, res, next) => {
+exports.processGetOneUserData = async(req, res, next) => {
     let recordId = req.params.recordId;
 
     try {
@@ -108,7 +112,8 @@ exports.processGetOneUserData = async (req, res, next) => {
             };
             return res.status(200).json(jsonResult);
         }
-    } catch (error) {
+    }
+    catch (error) {
         console.log(error);
         let message = 'Server is unable to process your request.';
         return res.status(500).json({
@@ -118,7 +123,7 @@ exports.processGetOneUserData = async (req, res, next) => {
 
 }; //End of processGetOneUserData
 
-exports.processUpdateOneUser = async (req, res, next) => {
+exports.processUpdateOneUser = async(req, res, next) => {
     console.log('processUpdateOneUser running');
     //Collect data from the request body 
     let recordId = req.body.recordId;
@@ -127,7 +132,8 @@ exports.processUpdateOneUser = async (req, res, next) => {
         results = await userManager.updateUser(recordId, newRoleId);
         console.log(results);
         return res.status(200).json({ message: 'Completed update' });
-    } catch (error) {
+    }
+    catch (error) {
         console.log('processUpdateOneUser method : catch block section code is running');
         console.log(error, '=======================================================================');
         let message = 'Unable to complete update operation'
@@ -137,7 +143,7 @@ exports.processUpdateOneUser = async (req, res, next) => {
 
 }; //End of processUpdateOneUser
 
-exports.processGetOneDesignData = async (req, res, next) => {
+exports.processGetOneDesignData = async(req, res, next) => {
     let recordId = req.params.fileId;
     try {
         let results = await userManager.getOneDesignData(recordId);
@@ -146,7 +152,8 @@ exports.processGetOneDesignData = async (req, res, next) => {
             console.log("Hello " + req.id);
             if (results[0].created_by_id == req.id) {
                 console.log({ message: 'it is sucessfully verified' });
-            } else {
+            }
+            else {
                 // console.log("it is not authorized.");
                 let message = 'it is not authorized.'
                 return res.status(500).json({ message: message });
@@ -157,7 +164,8 @@ exports.processGetOneDesignData = async (req, res, next) => {
             }
             return res.status(200).json(jsonResult);
         }
-    } catch (error) {
+    }
+    catch (error) {
         console.log(error);
         let message = 'Server is unable to process the request.';
         return res.status(500).json({
@@ -167,7 +175,7 @@ exports.processGetOneDesignData = async (req, res, next) => {
 
 }; //End of processGetOneDesignData
 
-exports.processUpdateOneDesign = async (req, res, next) => {
+exports.processUpdateOneDesign = async(req, res, next) => {
     console.log('processUpdateOneFile running');
     //Collect data from the request body 
     var data = {
@@ -181,7 +189,8 @@ exports.processUpdateOneDesign = async (req, res, next) => {
         console.log(results);
         // console.log("here is the result");
         return res.status(200).json({ message: 'Completed update' });
-    } catch (error) {
+    }
+    catch (error) {
         console.log('processUpdateOneUser method : catch block section code is running');
         console.log(error, '=======================================================================');
         return res.status(500).json({ message: 'Unable to complete update operation' });
